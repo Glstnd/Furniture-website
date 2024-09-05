@@ -26,10 +26,10 @@ class Database:
         self.engine = create_async_engine(
             URL.create(
                 drivername="postgresql+asyncpg",
-                username="kts_user",
-                password="kts_pass",
-                host="localhost",
-                database="kts"
+                username=self.app.config.database.user,
+                password=self.app.config.database.password,
+                host=self.app.config.database.host,
+                database=self.app.config.database.database
             ),
         )
         self.session = async_sessionmaker(
