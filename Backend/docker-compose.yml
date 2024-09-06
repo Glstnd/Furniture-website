@@ -1,0 +1,20 @@
+version: '1.1'
+
+services:
+  postgresDB:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: FurnitureWebSite
+    ports:
+      - "5432:5432"
+
+  prediction:
+    build:
+      context: ./python_aiohttp_API
+    ports:
+      - "7000:7000"
+    depends_on:
+      - postgresDB

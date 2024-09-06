@@ -6,13 +6,8 @@ admin:
   email: admin@admin.com
   password: admin
 database:
-  host: localhost
+  host: postgresDB
   port: 5432
   user: admin
   password: admin
   database: FurnitureWebSite
-bot:
-  token: group_token
-  group_id: 1
-
-

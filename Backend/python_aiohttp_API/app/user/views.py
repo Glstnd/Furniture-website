@@ -13,7 +13,19 @@ class UserLoginView(View):
     async def post(self):
         data = self.data
         user = await self.store.users.get_by_email(data.get("email"))
-        user_data = await AuthRequiredMixin.auth_admin(self.request, user, data)
+        user_data = await AuthRequiredMixin.auth_user(self.request, user, data)
+
+        return json_response(data=UserSchema().dump(user_data))
+
+
+class UserRegisterView(View):
+    @docs(tags=["user"], summary="Register user", description="register user")
+    @request_schema(UserSchema)
+    @response_schema(UserSchema, 200)
+    async def post(self):
+        data = self.data
+        user = await self.store.users.create_user(data.get("email"), data.get("password"))
+        user_data = await AuthRequiredMixin.auth_user(self.request, user, data)
 
         return json_response(data=UserSchema().dump(user_data))
 

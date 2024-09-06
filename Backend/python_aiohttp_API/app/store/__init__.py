@@ -11,8 +11,10 @@ class Store:
         self.app = app
 
         from app.store.admin.accessor import AdminAccessor
+        from app.store.user.accessor import UserAccessor
 
         self.admins = AdminAccessor(app)
+        self.users = UserAccessor(app)
 
 
 def setup_store(app: "Application"):

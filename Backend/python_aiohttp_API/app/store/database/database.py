@@ -29,7 +29,8 @@ class Database:
                 username=self.app.config.database.user,
                 password=self.app.config.database.password,
                 host=self.app.config.database.host,
-                database=self.app.config.database.database
+                database=self.app.config.database.database,
+                port=self.app.config.database.port
             ),
         )
         self.session = async_sessionmaker(

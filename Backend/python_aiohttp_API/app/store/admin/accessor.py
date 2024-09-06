@@ -15,6 +15,10 @@ class AdminAccessor(BaseAccessor):
         self.app = app
 
     async def get_by_email(self, email: str) -> AdminModel | None:
+        if self.app.config.admin.email == email:
+            return AdminModel(id=1, email=self.app.config.admin.email,
+                              password=hash_password(self.app.config.admin.password))
+
         request = select(AdminModel)
         async with self.app.database.session() as session:
             res = await session.execute(request)
@@ -22,10 +26,6 @@ class AdminAccessor(BaseAccessor):
             for admin in res:
                 if admin.email == email:
                     return AdminModel(id=1, email=admin.email, password=hash_password(admin.password))
-
-        if self.app.config.admin.email == email:
-            return AdminModel(id=1, email=self.app.config.admin.email,
-                              password=hash_password(self.app.config.admin.password))
 
         return None
 
