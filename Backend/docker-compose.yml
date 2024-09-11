@@ -12,6 +12,10 @@ services:
       - "5432:5432"
 
   prediction:
+    develop:
+      watch:
+        - action: rebuild
+          path: ./python_aiohttp_API
     build:
       context: ./python_aiohttp_API
     ports:

@@ -1,4 +1,4 @@
-from aiohttp.web_exceptions import HTTPUnauthorized, HTTPForbidden
+from aiohttp.web_exceptions import HTTPUnauthorized, HTTPForbidden, HTTPConflict
 from aiohttp_session import new_session, get_session
 
 from app.admin.models import AdminModel
@@ -42,7 +42,11 @@ class AuthRequiredMixin:
         if not data.get("email") or not data.get("password") or not user:
             raise HTTPForbidden
 
-        if data.get("email") == user.email and hash_password(data.get("password")) == user.password:
+        print(data.get("password"), hash_password(data.get("password")), str(user.password).strip())
+        if data.get("email") == str(user.email).strip():
+            if not hash_password(data.get("password")) == str(user.password).strip():
+                raise HTTPConflict
+            print("true")
             session = await new_session(request)
             session["email"] = user.email
             session["password"] = user.password

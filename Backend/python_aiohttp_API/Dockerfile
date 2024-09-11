@@ -5,4 +5,4 @@ COPY . /app/
 
 RUN pip install -r requirements.txt
 
-CMD python main.py run
+CMD python main.py run && alembic upgrade head
