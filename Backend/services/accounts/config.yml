@@ -6,7 +6,7 @@ admin:
   email: admin@admin.com
   password: admin
 database:
-  host: postgresDB
+  host: localhost
   port: 5432
   user: admin
   password: admin

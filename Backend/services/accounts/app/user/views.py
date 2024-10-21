@@ -1,9 +1,13 @@
+from datetime import datetime, timedelta
+
 from aiohttp_apispec import request_schema, response_schema, docs
 
 from app.user.schemes import UserSchema
 from app.web.app import View
 from app.web.mixins import AuthRequiredMixin
-from app.web.utils import json_response
+from app.web.utils import json_response, generate_jwt_token
+
+JWT_EXP_DELTA_SECONDS = 20
 
 
 class UserLoginView(View):
@@ -13,7 +17,13 @@ class UserLoginView(View):
     async def post(self):
         data = self.data
         user = await self.store.users.get_by_email(data.get("email"))
-        user_data = await AuthRequiredMixin.auth_user(self.request, user, data)
+
+        datetime_jwt = datetime.now() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
+        jwt_token = generate_jwt_token(user.email, datetime_jwt)
+
+        user_data = await AuthRequiredMixin.auth_user(self.request, user, data, jwt_token)
+
+        await self.store.user_tokens.create_user_token(user_id=user.id, jwt_datetime=datetime_jwt)
 
         return json_response(data=UserSchema().dump(user_data))
 
@@ -25,7 +35,12 @@ class UserRegisterView(View):
     async def post(self):
         data = self.data
         user = await self.store.users.create_user(data.get("email"), data.get("password"))
-        user_data = await AuthRequiredMixin.auth_user(self.request, user, data)
+
+        datetime_jwt = datetime.now() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
+        jwt_token = generate_jwt_token(user.email, datetime_jwt)
+        user_data = await AuthRequiredMixin.auth_user(self.request, user, data, jwt_token)
+
+        await self.store.user_tokens.create_user_token(user_id=user.id, jwt_datetime=datetime_jwt)
 
         return json_response(data=UserSchema().dump(user_data))
 

@@ -1,7 +1,5 @@
 from collections.abc import Iterable
 
-from app.quiz.models import AnswerModel, QuestionModel, ThemeModel
-
 
 def theme_to_dict(theme: ThemeModel) -> dict:
     return {

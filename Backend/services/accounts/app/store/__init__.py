@@ -11,10 +11,16 @@ class Store:
         self.app = app
 
         from app.store.admin.accessor import AdminAccessor
+        from app.store.admin.accessor import AdminTokenAccessor
+
         from app.store.user.accessor import UserAccessor
+        from app.store.user.accessor import UserTokenAccessor
 
         self.admins = AdminAccessor(app)
+        self.admin_tokens = AdminTokenAccessor(app)
+
         self.users = UserAccessor(app)
+        self.user_tokens = UserTokenAccessor(app)
 
 
 def setup_store(app: "Application"):

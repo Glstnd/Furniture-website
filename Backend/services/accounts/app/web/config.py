@@ -20,11 +20,11 @@ class AdminConfig:
 
 @dataclass
 class DatabaseConfig:
-    host: str = "localhost"
-    port: int = 5432
-    user: str = "postgres"
-    password: str = "postgres"
-    database: str = "project"
+    host: str = "postgresDB"
+    port: int = 5433
+    user: str = "admin"
+    password: str = "admin"
+    database: str = "FurnitureWebSite"
 
 
 @dataclass
