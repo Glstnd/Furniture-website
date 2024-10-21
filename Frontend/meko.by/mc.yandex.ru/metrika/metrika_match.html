@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+</head>
+
+<body>
+    <script>
+        (function() {
+            try {
+                (function() {
+                    function k(a) {
+                        var c = a.document;
+                        if (c.hasStorageAccess) c.hasStorageAccess().then(function(b) {
+                            a.parent.postMessage("sc.sar*" + (b ? "1" : "2"), "*")
+                        })["catch"](function() {
+                            a.parent.postMessage("sc.sar*c", "*")
+                        })
+                    }
+
+                    function h(a) {
+                        try {
+                            return encodeURIComponent(a)
+                        } catch (c) {}
+                        a = t("", u(function(c) {
+                            return 55296 >= c.charCodeAt(0)
+                        }, a.split("")));
+                        return encodeURIComponent(a)
+                    }
+
+                    function t(a, c) {
+                        return Array.prototype.join.call(c, a)
+                    }
+
+                    function u(a, c) {
+                        return Array.prototype.filter.call(c, a)
+                    }
+
+                    function v(a) {
+                        function c(b,
+                            e) {
+                            var l = "sc.topics-response*" + b;
+                            a.parent.postMessage(e ? l + "*" + e : l, "*")
+                        }
+                        a.document.browsingTopics().then(function(b) {
+                            return c("1", JSON.stringify(b))
+                        })["catch"](function() {
+                            return c("e")
+                        })
+                    }
+
+                    function f(a, c, b) {
+                        void 0 === b && (b = !0);
+                        return function() {
+                            d[a] && (d[a].timeout && (clearTimeout(d[a].timeout), d[a].timeout = 0, b && window.parent.postMessage(["sc.image", a, c].join("*"), "*")), d[a].g = null)
+                        }
+                    }
+
+                    function m(a, c) {
+                        var b;
+                        a: {
+                            for (b = 0; b < n.length; b++)
+                                if (n[b] === a) {
+                                    b = !0;
+                                    break a
+                                }
+                            for (b = 0; b < p.length; b++)
+                                if (p[b].test(a)) {
+                                    b = !0;
+                                    break a
+                                }
+                            b = !1
+                        }
+                        if (b) {
+                            b = document.createElement("img");
+                            b.onload = f(a, "1");
+                            b.onerror = f(a, "e");
+                            b.src = a;
+                            var e = f(a, "f", c);
+                            d[a] = {
+                                g: b,
+                                timeout: setTimeout(e, 5E3)
+                            }
+                        } else f(a, "g")()
+                    }
+
+                    function q(a) {
+                        try {
+                            if (a.data && a.data.split) {
+                                var c = a.data.split("*");
+                                if ("sc.images" === c[0])
+                                    for (a = 1; a < c.length; a++) m(c[a], !0);
+                                else "sc.topics" === c[0] ? v(window) : "sc.sa" === c[0] ? k(window) : "frameReinit" === c[0] && window.parent.postMessage("sc.frame", "*")
+                            }
+                        } catch (b) {}
+                    }
+                    var n = ["https://an.yandex.ru/mapuid/google/", "https://dmp.adform.net/serving/cookie/match?party=1123",
+                            "https://mc.kinopoisk.ru/sync_cookie_image_check"
+                        ],
+                        p = [/^https*:\/\/mc\.yandex\.(?:ru|by|kz|az|kg|lv|md|tj|tm|uz|ee|fr|co\.il|com\.ge|com\.am|com\.tr|com)\/sync_cookie_image_check$/, /^https:\/\/mc\.yandex\.ru\/watch\/26302566\?/, /^https:\/\/adstat.yandex.ru\/track\?service=metrika&id=\d+/, /^https:\/\/[^\.\/]+\.mc\.yandex.ru\/watch\/3\/1/, /^https:\/\/adfstat\.yandex\.ru\/metrica\?id=\d+/],
+                        d = {};
+                    if (window.top === window) {
+                        var r = "page-url=" + h(window.location.href),
+                            g = document.referrer;
+                        g && (r += "&page-ref=" +
+                            h(g));
+                        g = h("ar:1:pv:1:v:1450");
+                        m("https://mc.yandex.ru/watch/26302566?" + (r + ("&browser-info=" + g)), !1)
+                    } else window.postMessage && window.parent && (window.addEventListener ? window.addEventListener("message", q, !1) : window.attachEvent && window.attachEvent("onmessage", q), window.parent.postMessage("sc.frame", "*"))
+                })()
+            } catch (k) {};
+        }).call(this)
+    </script>
+</body>
+
+</html>

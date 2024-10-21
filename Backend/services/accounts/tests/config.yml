@@ -1,0 +1,14 @@
+session:
+  key: CaY5iCkYtN7DqXdiYK1BvmGrQuaSA4Tl4bEk9my0jc0=
+admin:
+  email: admin@admin.com
+  password: admin
+bot:
+  token: group_token
+  group_id: 1
+database:
+  host: localhost
+  port: 5432
+  user: kts_user
+  password: kts_pass
+  database: kts
