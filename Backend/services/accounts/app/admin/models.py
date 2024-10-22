@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, CHAR, ForeignKey, Date, DateTime
+from sqlalchemy import Column, BigInteger, ForeignKey, DateTime, String
 
 from app.store.database.sqlalchemy_base import BaseModel
 
@@ -6,8 +6,8 @@ from app.store.database.sqlalchemy_base import BaseModel
 class AdminModel(BaseModel):
     __tablename__ = "admins"
     id = Column(BigInteger, primary_key=True)
-    email = Column(CHAR(20), unique=True, nullable=False)
-    password = Column(CHAR(20), nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
 
 
 class AdminTokenModel(BaseModel):

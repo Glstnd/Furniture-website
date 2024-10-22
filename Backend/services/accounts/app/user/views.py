@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from aiohttp.web_exceptions import HTTPForbidden
 from aiohttp_apispec import request_schema, response_schema, docs
 
 from app.user.schemes import UserSchema
@@ -17,6 +18,9 @@ class UserLoginView(View):
     async def post(self):
         data = self.data
         user = await self.store.users.get_by_email(data.get("email"))
+
+        if not user:
+            raise HTTPForbidden
 
         datetime_jwt = datetime.now() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
         jwt_token = generate_jwt_token(user.email, datetime_jwt)
