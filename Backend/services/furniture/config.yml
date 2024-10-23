@@ -2,6 +2,9 @@ user_token: OTY3NmVjYWYtZTJhNC00NzNhLTgwM2YtZGY3OTBkYTM3YWFhXzcxMTQ=
 
 session:
   key: CaY5iCkYtN7DqXdiYK1BvmGrQuaSA4Tl4bEk9my0jc0=
+user:
+  email: admin@admin.com
+  password: admin
 admin:
   email: admin@admin.com
   password: admin

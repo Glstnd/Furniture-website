@@ -10,4 +10,7 @@ class CatalogModel(BaseModel):
     image = Column(LargeBinary)
 
 
-class ProductModel(Base)
+class TypeProductModel(BaseModel):
+    __tablename__ = "types"
+    id = Column(BigInteger, primary_key=True)
+    title = Column(String, nullable=False)

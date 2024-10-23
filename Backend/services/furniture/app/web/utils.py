@@ -43,6 +43,12 @@ def rehash_password(password: str) -> str:
     return base64.b64decode(password).decode()
 
 
+def image_to_binary(image_path):
+    with open(image_path, 'rb') as file:
+        binary_data = file.read()
+    return binary_data
+
+
 def generate_jwt_token(user_login: str, datetime_jwt: datetime):
     payload = {
         'user_login': user_login,

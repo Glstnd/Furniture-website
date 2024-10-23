@@ -12,7 +12,7 @@ class Store:
 
         from app.store.catalog.accessor import CatalogAccessor
 
-        self.catalog = CatalogAccessor(app)
+        self.catalogs = CatalogAccessor(app)
 
 
 def setup_store(app: "Application"):
