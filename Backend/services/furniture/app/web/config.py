@@ -13,18 +13,6 @@ class SessionConfig:
 
 
 @dataclass
-class AdminConfig:
-    email: str
-    password: str
-
-
-@dataclass
-class UserConfig:
-    email: str
-    password: str
-
-
-@dataclass
 class DatabaseConfig:
     host: str
     port: int
@@ -35,8 +23,6 @@ class DatabaseConfig:
 
 @dataclass
 class Config:
-    admin: AdminConfig
-    user: UserConfig
     session: SessionConfig | None = None
     database: DatabaseConfig | None = None
 
@@ -48,14 +34,6 @@ def setup_config(app: "Application", config_path: str):
     app.config = Config(
         session=SessionConfig(
             key=raw_config["session"]["key"],
-        ),
-        admin=AdminConfig(
-            email=raw_config["admin"]["email"],
-            password=raw_config["admin"]["password"],
-        ),
-        user=UserConfig(
-            email=raw_config["user"]["email"],
-            password=raw_config["user"]["password"],
         ),
         database=DatabaseConfig(**raw_config["database"]),
     )

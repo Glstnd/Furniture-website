@@ -28,18 +28,25 @@ class AuthRequiredMixin:
 
     @staticmethod
     async def check_auth_admin(request: Request) -> AdminModel | None:
+        print(request.cookies)
         session = await get_session(request)
+        print(session)
         jwt_token = session.get("token")
         email = session.get("email")
+        print(jwt_token, email)
 
         if not email or not jwt_token:
             raise HTTPUnauthorized
 
         admin = await request.app.store.admins.get_by_email(email)
+        print(admin)
         admin_token: AdminTokenModel = await request.app.store.admin_tokens.get_by_admin_id(admin.id)
+        print(admin_token)
+        print(jwt_token, generate_jwt_token(user_login=admin.email, datetime_jwt=admin_token.jwt_datetime))
         if jwt_token == generate_jwt_token(user_login=admin.email, datetime_jwt=admin_token.jwt_datetime):
             return AdminModel(id=admin.id, email=admin.email)
 
+        print("raise")
         raise HTTPUnauthorized
 
     @staticmethod

@@ -17,17 +17,19 @@ class AdminLoginView(View):
     @response_schema(AdminSchema, 200)
     async def post(self):
         data = self.data
+        print(data)
         admin = await self.store.admins.get_by_email(data.get("email"))
 
+        print(data, AdminSchema().dump(admin))
         if not admin:
             raise HTTPForbidden
 
         datetime_jwt = datetime.now() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
         jwt_token = generate_jwt_token(admin.email, datetime_jwt)
 
-        admin_data = await AuthRequiredMixin.auth_admin(self.request, admin, data, jwt_token)
-
         await self.store.admin_tokens.create_admin_token(admin_id=admin.id, jwt_datetime=datetime_jwt)
+
+        admin_data = await AuthRequiredMixin.auth_admin(self.request, admin, data, jwt_token)
 
         return json_response(data=AdminSchema().dump(admin_data))
 
@@ -42,9 +44,10 @@ class AdminRegisterView(View):
 
         datetime_jwt = datetime.now() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
         jwt_token = generate_jwt_token(admin.email, datetime_jwt)
-        admin_data = await AuthRequiredMixin.auth_admin(self.request, admin, data, jwt_token)
 
         await self.store.admin_tokens.create_admin_token(admin_id=admin.id, jwt_datetime=datetime_jwt)
+
+        admin_data = await AuthRequiredMixin.auth_admin(self.request, admin, data, jwt_token)
 
         return json_response(data=AdminSchema().dump(admin_data))
 

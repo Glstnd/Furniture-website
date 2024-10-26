@@ -1,12 +1,10 @@
 from aiohttp.web_exceptions import HTTPForbidden
 from aiohttp_apispec import response_schema, docs, request_schema
 
-from app.catalog.schemes import CatalogSchema, ListOfCatalogsSchema
+from app.catalog.schemes import CatalogSchema
 from app.web.app import View
+from app.web.mixins import AuthRequiredMixin
 from app.web.utils import json_response
-
-import matplotlib.pyplot as plt
-import io
 
 
 class CatalogView(View):
@@ -14,30 +12,33 @@ class CatalogView(View):
     @response_schema(CatalogSchema, 200)
     async def get(self):
         catalogs = await self.store.catalogs.get_list_of_catalogs()
-        print(catalogs)
-        for catalog in catalogs:
-            # Преобразуем бинарные данные в изображение
-            image = io.BytesIO(catalog.image)
 
-            # Отображаем изображение с помощью matplotlib
-            img = plt.imread(image, format='JPEG')
-            plt.imshow(img)
-            plt.axis('off')
-            plt.show()
-
-        return json_response(data=ListOfCatalogsSchema().dump(catalogs))
+        return json_response(data={"catalogs": [CatalogSchema().dump(catalog) for catalog in catalogs]})
 
 
 class CatalogCreateView(View):
-    @docs(tags=["catalog"], summary="List of catalog", description="Get list of catalog")
+    @docs(tags=["catalog"], summary="Create new catalog", description="Create new catalog")
+    @request_schema(CatalogSchema)
     @response_schema(CatalogSchema, 200)
     async def post(self):
-        data = await self.request.json()
+        await AuthRequiredMixin.check_auth_admin(self.request)
+
+        data = self.data
+        print(data)
         title = data.get("title")
-        path = data.get("path")
-        if not title or not path:
+        tag = data.get("tag")
+        if not title or not tag:
             raise HTTPForbidden
 
-        catalog = await self.store.catalogs.create_new_catalog(title, path)
+        catalog = await self.store.catalogs.create_new_catalog(title, tag)
 
         return json_response(data=CatalogSchema().dump(catalog))
+
+
+class TypesProductsListView(View):
+    async def get(self):
+        data = self.request.match_info["catalog_tag"]
+        print(data)
+        catalogs = await self.store.catalogs.get_list_of_catalogs()
+
+        return json_response(data={"catalogs": [CatalogSchema().dump(catalog) for catalog in catalogs]})
