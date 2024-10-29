@@ -22,19 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Compose
-        uses: ndeloof/install-compose-action@v0.0.1
+      - name: Run Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
         with:
-          version: v2.1.0
-          legacy: true
-      - run: docker-compose --version
-
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-
-      - name: Build project
-        run: docker-compose build
-
-      - name: Start project
-        run: docker-compose up
+          compose-file: './docker-compose.yml'
