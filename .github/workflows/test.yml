@@ -25,6 +25,13 @@ jobs:
       - name: List files
         run: ls -la
 
+      - name: Check if docker-compose.yml exists
+        run: ls -la 'docker-compose.yml'
+
+      - name: Run Docker Compose
+        run: docker-compose up -d
+        working-directory: 'docker-compose.yml'
+
       - name: Run Docker Compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
