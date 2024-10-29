@@ -1,0 +1,23 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check changes files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  deploy:
+    name: Build project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build project
+        run: docker-compose -f docker-compose.yml up -d --wait
