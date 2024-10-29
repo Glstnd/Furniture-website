@@ -30,4 +30,7 @@ jobs:
       - run: docker-compose --version
 
       - name: Build project
-        run: docker-compose -f ./docker-compose.yml up
+        run: docker-compose build
+
+      - name: Start project
+        run: docker-compose up
