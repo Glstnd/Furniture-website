@@ -26,7 +26,7 @@ jobs:
         run: ls -la
 
       - name: Check if docker-compose.yml exists
-        run: ls -la 'home'
+        run: ls -la 'usr'
 
       - name: Run Docker Compose
         run: docker-compose up -d
