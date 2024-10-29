@@ -29,6 +29,10 @@ jobs:
           legacy: true
       - run: docker-compose --version
 
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
       - name: Build project
         run: docker-compose build
 
