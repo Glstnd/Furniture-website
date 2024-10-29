@@ -24,7 +24,6 @@ class CatalogCreateView(View):
         await AuthRequiredMixin.check_auth_admin(self.request)
 
         data = self.data
-        print(data)
         title = data.get("title")
         tag = data.get("tag")
         if not title or not tag:

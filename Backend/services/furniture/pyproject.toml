@@ -1,0 +1,180 @@
+[tool.ruff]
+line-length = 80
+indent-width = 4
+target-version = "py312"
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".gitlab",
+    ".git-rewrite",
+    ".hg",
+    ".kube",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "docker",
+    "env",
+    "etc",
+    "migrations",
+    "requirements",
+    "venv",
+    "alembic",
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"__init__.py" = ["F403"]
+"tests/*.py" = [
+   "SIM300", # yoda-conditions                   (https://docs.astral.sh/ruff/rules/yoda-conditions/)
+    "F403",  # undefined-local-with-import-star  (https://docs.astral.sh/ruff/rules/undefined-local-with-import-star)
+]
+
+
+[tool.ruff.format]
+# Аналогично black, двойные кавычки
+quote-style = "double"
+# Аналогично black, пробелы вместо табов
+indent-style = "space"
+# Аналогично black, уважаем trailing commas
+skip-magic-trailing-comma = false
+# Аналогично black, автоматически определяем подходящее окончание строки.
+line-ending = "auto"
+
+[tool.ruff.lint]
+fixable = ["I", "RUF022", "RUF023", "UP007", "F401"]
+preview = true
+
+# Правила, которые следует добавить к указанным в "select=[]" конфига или "--select" команды
+extend-select = [
+    "A001",     # builtin-variable-shadowing                    (https://docs.astral.sh/ruff/rules/builtin-variable-shadowing)
+    "B",        # flake8-bugbear                                (https://docs.astral.sh/ruff/rules/builtin-argument-shadowing)
+    "C4",       # flake8-comprehensions                         (https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4)
+    "C901",     # complex-structure                             (https://docs.astral.sh/ruff/rules/complex-structure/)
+    "COM818",   # trailing-comma-on-bare-tuple                  (https://docs.astral.sh/ruff/rules/trailing-comma-on-bare-tuple)
+    "COM819",   # prohibited-trailing-comma                     (https://docs.astral.sh/ruff/rules/prohibited-trailing-comma)
+    "D",        # pydocstyle                                    (https://docs.astral.sh/ruff/rules/#pydocstyle-d)
+    "E",        # pycodestyle                                   (https://docs.astral.sh/ruff/rules/#error-e)
+    "FBT003",   # boolean-positional-value-in-call              (https://docs.astral.sh/ruff/rules/boolean-positional-value-in-call)
+    "G",        # flake8-logging-format (G)                     (https://docs.astral.sh/ruff/rules/#flake8-logging-format-g)
+    "I",        # isort                                         (https://docs.astral.sh/ruff/rules/#isort-i)
+    "ISC003",   # explicit-string-concatenation                 (https://docs.astral.sh/ruff/rules/explicit-string-concatenation)
+    "N",        # pep8-naming                                   (https://docs.astral.sh/ruff/rules/#pep8-naming-n)
+    "PGH",      # pygrep-hooks                                  (https://docs.astral.sh/ruff/rules/#pygrep-hooks-pgh)
+    "PIE",      # flake8-pie                                    (https://docs.astral.sh/ruff/rules/#flake8-pie-pie)
+    "PYI",      # flake8-pyi                                    (https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi)
+    "PL",       # Pylint                                        (https://docs.astral.sh/ruff/rules/#pylint-pl)
+    "PT",       # flake8-pytest-style                           (https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt)
+    "PLR",      # flake8-pytest-style                           (https://docs.astral.sh/ruff/rules/#flake8-pytest-style-pt)
+    "RET",      # flake8-return                                 (https://docs.astral.sh/ruff/rules/#flake8-return-ret)
+    "RUF",      # Ruff-specific rules                           (https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf)
+    "SIM",      # flake8-simplify                               (https://docs.astral.sh/ruff/rules/#flake8-simplify-sim)
+    "T20",      # flake8-print                                  (https://docs.astral.sh/ruff/rules/#flake8-print-t20)
+    "B904",     # reraise-no-cause                              (https://docs.astral.sh/ruff/rules/reraise-no-cause)
+    "TRY300",   # try-consider-else                             (https://docs.astral.sh/ruff/rules/try-consider-else)
+    "TRY302",   # useless-try-except                            (https://docs.astral.sh/ruff/rules/useless-try-except)
+    "TRY401",   # verbose-log-message                           (https://docs.astral.sh/ruff/rules/verbose-log-message)
+    "TCH004",
+    "TCH005",
+    "TCH010",
+    "UP",       # pyupgrade                                     (https://docs.astral.sh/ruff/rules/#pyupgrade-up)
+    "W",        # pycodestyle                                   (https://docs.astral.sh/ruff/rules/#warning-w)
+]
+
+extend-ignore = [
+    "B009",     #  get-attr-with-constant                       (https://docs.astral.sh/ruff/rules/get-attr-with-constant)
+    "B010",     #  set-attr-with-constant                       (https://docs.astral.sh/ruff/rules/set-attr-with-constant)
+    "B012",     #  jump-statement-in-finally                    (https://docs.astral.sh/ruff/rules/jump-statement-in-finally)
+    "D1",       #  undocumented-public-smth                     (https://docs.astral.sh/ruff/rules/#pydocstyle-d)
+    "D205",     #  blank-line-after-summary                     (https://docs.astral.sh/ruff/rules/blank-line-after-summary)
+    "D415",     #  ends-in-punctuation                          (https://docs.astral.sh/ruff/rules/ends-in-punctuation/)
+    "E2",       #  [reason: unstable]                           (https://docs.astral.sh/ruff/rules/#error-e)
+    "F405",     #  undefined-local-with-import-star-usage       (https://docs.astral.sh/ruff/rules/undefined-local-with-import-star-usage)
+    "PLC0415",  #  import-outside-top-level                     (https://docs.astral.sh/ruff/rules/import-outside-top-level)
+    "PLC2801",  #  unnecessary-dunder-call                      (https://docs.astral.sh/ruff/rules/unnecessary-dunder-call)
+    "PLR2004",  #  magic-value-comparison                       (https://docs.astral.sh/ruff/rules/magic-value-comparison)
+    "PLR0904",  #  too-many-public-methods                      (https://docs.astral.sh/ruff/rules/too-many-public-methods)
+    "PLR0916",  #  too-many-boolean-expressions                 (https://docs.astral.sh/ruff/rules/too-many-boolean-expressions)
+    "PLR0917",  #  too-many-positional                          (https://docs.astral.sh/ruff/rules/too-many-positional)
+    "PLR6201",  #  literal-membership                           (https://docs.astral.sh/ruff/rules/literal-membership)
+    "PLR6301",  #  no-self-use                                  (https://docs.astral.sh/ruff/rules/no-self-use)
+    "PLW1514",  #  unspecified-encoding                         (https://docs.astral.sh/ruff/rules/unspecified-encoding)
+    "PLW1641",  #  eq-without-hash                              (https://docs.astral.sh/ruff/rules/eq-without-hash)
+    "PLC2701",  #  import-private-name                          (https://docs.astral.sh/ruff/rules/import-private-name)
+    "PLR0913",  #  too-many-arguments                           (https://docs.astral.sh/ruff/rules/too-many-arguments)
+    "PLR1714",  #  repeated-equality-comparison                 (https://docs.astral.sh/ruff/rules/repeated-equality-comparison)
+    "RUF001",   #  ambiguous-unicode-character-string           (https://docs.astral.sh/ruff/rules/ambiguous-unicode-character-string)
+    "RUF002",   #  ambiguous-unicode-character-docstring        (https://docs.astral.sh/ruff/rules/ambiguous-unicode-character-docstring)
+    "RUF003",   #  ambiguous-unicode-character-comment          (https://docs.astral.sh/ruff/rules/ambiguous-unicode-character-comment)
+    "RUF009",   #  function-call-in-dataclass-default-argument  (https://docs.astral.sh/ruff/rules/function-call-in-dataclass-default-argument)
+    "RUF012",   #  mutable-class-default                        (https://docs.astral.sh/ruff/rules/mutable-class-default)
+    "RUF021",   #  parenthesize-chained-operators               (https://docs.astral.sh/ruff/rules/parenthesize-chained-operators)
+    "RUF025",   #  unnecessary-dict-comprehension-for-iterable  (https://docs.astral.sh/ruff/rules/unnecessary-dict-comprehension-for-iterable)
+    "SIM105",   #  suppressible-exception                       (https://docs.astral.sh/ruff/rules/suppressible-exception)
+    "SIM108",   #  if-else-block-instead-of-if-exp              (https://docs.astral.sh/ruff/rules/if-else-block-instead-of-if-exp)
+    "SIM117",   #  multiple-with-statements                     (https://docs.astral.sh/ruff/rules/multiple-with-statements)
+    "UP012",    #  unnecessary-encode-utf8                      (https://docs.astral.sh/ruff/rules/unnecessary-encode-utf8)
+    "UP015",    #  redundant-open-modes                         (https://docs.astral.sh/ruff/rules/redundant-open-modes)
+    "UP032",    #  f-string                                     (https://docs.astral.sh/ruff/rules/f-string)
+
+
+    "D203",
+    "D212",
+    # При использовании Ruff в качестве форматтера, рекомендуется избегать следующих правил:
+    # (https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules)
+    "COM812",
+    "COM819",
+    "E111",
+    "E114",
+    "E117",
+    "E501",
+    "D206",
+    "D300",
+    "ISC001",
+    "ISC002",
+    "Q000",
+    "Q001",
+    "Q002",
+    "Q003",
+    "W191",
+]
+
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+
+[tool.ruff.lint.flake8-type-checking]
+exempt-modules = ["typing"]
+quote-annotations = true
+
+[tool.ruff.lint.flake8-unused-arguments]
+ignore-variadic-names = true
+
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "csv"
+parametrize-values-type = "tuple"
+
+[tool.pytest.ini_options]
+asyncio_mode="auto"
+filterwarnings = [
+    "ignore::DeprecationWarning:asyncpg.*:",
+    "ignore::DeprecationWarning:pytest_asyncio.plugin.*:",
+    "ignore::DeprecationWarning",
+]
+
+

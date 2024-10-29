@@ -1,0 +1,35 @@
+services:
+  postgresDB:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: FurnitureWebSite
+    ports:
+      - "5433:5433"
+
+  accounts_service:
+    develop:
+      watch:
+        - action: rebuild
+          path: ./Backend/services/accounts
+    build:
+      context: ./Backend/services/accounts
+    ports:
+      - "7000:7000"
+    depends_on:
+      - postgresDB
+
+  furniture_service:
+    develop:
+      watch:
+        - action: rebuild
+          path: ./Backend/services/furniture
+    build:
+      context: ./Backend/services/furniture
+    ports:
+      - "7001:7001"
+    depends_on:
+      - postgresDB
+      - accounts_service
