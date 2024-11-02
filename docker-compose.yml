@@ -1,15 +1,19 @@
 services:
   postgresDB:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgresDB
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: FurnitureWebSite
+      PGPORT: 5433
+    expose:
+      - "5433"
     ports:
       - "5433:5433"
 
   accounts_service:
+    container_name: accounts_service
     develop:
       watch:
         - action: rebuild
@@ -22,6 +26,7 @@ services:
       - postgresDB
 
   furniture_service:
+    container_name: furniture_service
     develop:
       watch:
         - action: rebuild
