@@ -19,14 +19,15 @@ jobs:
         ports:
           - 5433:5433
         options:
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U ${{ secrets.POSTGRES_USER }}"
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
 
     steps:
       - name: Start PostgreSQL
-        run: do echo "Database works!"
+        run: |
+          until pg_isready -h localhost -p 5433 -U admin; do echo "Waiting for database...";
 
   test_accounts_service:
     runs-on: ubuntu-latest
