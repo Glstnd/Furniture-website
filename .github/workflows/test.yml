@@ -23,6 +23,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+  test_accounts_service:
+    runs-on: ubuntu-latest
+    needs:
+      - setup_services
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -39,18 +47,6 @@ jobs:
       - name: Install Python dependencies
         working-directory: Backend/services/accounts
         run: pip install -r requirements.txt
-
-  test_accounts_service:
-    runs-on: ubuntu-latest
-    needs:
-      - setup_services
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Activate virtual environment
-        working-directory: Backend/services/accounts
-        run: source venv/bin/activate
 
       - name: Run tests
         working-directory: Backend/services/accounts
