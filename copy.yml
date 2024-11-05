@@ -1,0 +1,38 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check changes files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+  deploy:
+    needs:
+      - check
+
+    name: Build project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List files
+        run: ls -la
+
+      - name: Check if docker-compose.yml exists
+        run: ls -la 'usr'
+
+      - name: Run Docker Compose
+        run: docker-compose up -d
+        working-directory: 'docker-compose.yml'
+
+      - name: Run Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: 'Furniture-website/docker-compose.yml'
