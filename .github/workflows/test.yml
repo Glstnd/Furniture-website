@@ -30,7 +30,7 @@ jobs:
 
       - name: Create virtual environment
         working-directory: Backend/services/accounts
-        run: python -m venv Backend/services/accounts/venv
+        run: python -m venv venv
 
       - name: Install Python dependencies
         working-directory: Backend/services/accounts
