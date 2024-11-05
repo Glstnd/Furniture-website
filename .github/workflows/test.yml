@@ -34,6 +34,9 @@ jobs:
       - name: Create virtual environment
         run: python -m venv venv
 
+      - name: Checkout folder
+        run: pwd
+
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
