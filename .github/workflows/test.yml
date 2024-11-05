@@ -27,8 +27,11 @@ jobs:
     steps:
       - name: Starting database
         run: echo "Starting database"
+
   test_accounts_service:
     runs-on: ubuntu-latest
+
+    needs: start_db
 
     steps:
       - name: Checkout code
