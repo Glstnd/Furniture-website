@@ -46,7 +46,7 @@ jobs:
 
       - name: Activate virtual environment
         working-directory: Backend/services/accounts
-        run: source venv/bin/activate
+        run: source venv/Scripts/activate
 
       - name: Run tests
         working-directory: Backend/services/accounts
