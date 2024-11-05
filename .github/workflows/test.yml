@@ -23,22 +23,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Change directory
-        run: cd Backend/services/accounts
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
 
       - name: Create virtual environment
+        working-directory: Backend/services/accounts
         run: python -m venv venv
 
-      - name: Checkout folder
-        working-directory: Backend/services/accounts
-        run: pwd
-
       - name: Install Python dependencies
+        working-directory: Backend/services/accounts
         run: pip install -r requirements.txt
 
   test_accounts_service:
@@ -49,11 +44,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Change directory
-        run: cd Backend/services/accounts
-
       - name: Activate virtual environment
+        working-directory: Backend/services/accounts
         run: source venv/bin/activate
 
       - name: Run tests
+        working-directory: Backend/services/accounts
         run: pytest tests
