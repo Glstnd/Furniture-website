@@ -30,8 +30,25 @@ jobs:
 
   test_accounts_service:
     runs-on: ubuntu-latest
+
+    services:
+      postgresDB:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: FurnitureWebSite
+        ports:
+          - 5433:5433
+        options:
+          --health-cmd "pg_isready -U admin"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     needs:
       - setup_services
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
