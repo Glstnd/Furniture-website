@@ -30,7 +30,7 @@ jobs:
 
       - name: Create virtual environment
         working-directory: Backend/services/accounts
-        run: python -m venv venv
+        run: python -m venv Backend/services/accounts/venv
 
       - name: Install Python dependencies
         working-directory: Backend/services/accounts
@@ -50,7 +50,7 @@ jobs:
 
       - name: Activate virtual environment
         working-directory: Backend/services/accounts
-        run: source venv/Scripts/activate
+        run: source venv/bin/activate
 
       - name: Run tests
         working-directory: Backend/services/accounts
