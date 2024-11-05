@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test_accounts_service:
+  start_db:
     runs-on: ubuntu-latest
 
     services:
@@ -23,6 +23,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
+    steps:
+      - name: Starting database
+        run: echo "Starting database"
+  test_accounts_service:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
