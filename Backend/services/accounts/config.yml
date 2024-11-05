@@ -10,7 +10,7 @@ user:
   password: admin
 
 database:
-  host: postgresDB
+  host: localhost
   port: 5433
   user: admin
   password: admin

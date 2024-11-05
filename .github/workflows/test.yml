@@ -20,8 +20,8 @@ jobs:
           - 5433:5433
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Start PostgreSQL
+        run: until pg_isready -h localhost -p 5433 -U admin
 
   test_accounts_service:
     runs-on: ubuntu-latest
@@ -47,6 +47,10 @@ jobs:
       - name: Install Python dependencies
         working-directory: Backend/services/accounts
         run: pip install -r requirements.txt
+
+      - name: Start migrations
+        working-directory: Backend/services/accounts
+        run: alembic upgrade head
 
       - name: Run tests
         working-directory: Backend/services/accounts
