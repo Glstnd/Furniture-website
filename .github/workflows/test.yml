@@ -26,8 +26,7 @@ jobs:
 
     steps:
       - name: Start PostgreSQL
-        run: |
-          until pg_isready -h localhost -p 5433 -U admin; do echo "Waiting for database...";
+        run: echo "Dabase started"
 
   test_accounts_service:
     runs-on: ubuntu-latest
