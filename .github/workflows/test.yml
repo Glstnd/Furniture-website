@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Checkout folder
-        working-directory: Backend/services/accounts
+        working-directory: Backend/services/accounts/venv
         run: pwd
 
       - name: Activate virtual environment
