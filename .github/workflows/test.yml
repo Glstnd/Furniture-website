@@ -35,6 +35,7 @@ jobs:
         run: python -m venv venv
 
       - name: Checkout folder
+        working-directory: Backend/services/accounts
         run: pwd
 
       - name: Install Python dependencies
