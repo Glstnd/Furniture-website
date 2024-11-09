@@ -9,6 +9,6 @@ if typing.TYPE_CHECKING:
 def setup_routes(app: "Application"):
     from app.admin.views import AdminLoginView
 
-    app.router.add_view("/admin.login", AdminLoginView)
-    app.router.add_view("/admin.current", AdminCurrentView)
-    app.router.add_view("/admin.register", AdminRegisterView)
+    app.router.add_view("/api/accounts/admin.login", AdminLoginView)
+    app.router.add_view("/api/accounts/admin.current", AdminCurrentView)
+    app.router.add_view("/api/accounts/admin.register", AdminRegisterView)

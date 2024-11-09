@@ -54,7 +54,7 @@ def setup_app(config_path: str) -> Application:
     session_setup(app, EncryptedCookieStorage(secret_key=app.config.session.key, cookie_name="token", path='/'))
     setup_routes(app)
     setup_aiohttp_apispec(
-        app, title="catalog_microservice", url="/docs/json", swagger_path="/docs"
+        app, title="catalog_microservice", url="/api/catalog/docs/json", swagger_path="/api/catalog/docs"
     )
     setup_middlewares(app)
     setup_store(app)
