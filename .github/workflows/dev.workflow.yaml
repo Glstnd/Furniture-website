@@ -16,7 +16,7 @@ jobs:
           POSTGRES_PASSWORD: admin
           POSTGRES_DB: PetPal
         ports:
-          - 5432:5432
+          - 5433:5432
         options:
           --health-cmd "pg_isready -U admin"
           --health-interval 10s
@@ -33,30 +33,30 @@ jobs:
           python-version: 3.12
 
       - name: Create virtual environment
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: python -m venv venv
 
       - name: Activate virtual environment
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: source venv/bin/activate
 
       - name: Install Python dependencies
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: pip install -r requirements.txt
 
       - name: Add environment variables
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: |
           echo "DB_USER=admin" >> .env
           echo "DB_PASSWORD=admin" >> .env
           echo "DB_HOST=localhost" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "DB_NAME=PetPal" >> .env
+          echo "DB_PORT=5433" >> .env
+          echo "DB_NAME=FurnitureWebSite" >> .env
 
       - name: Start migrations
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: alembic upgrade head
 
       - name: Run tests
-        working-directory: accounts
+        working-directory: Backend/services/accounts
         run: pytest tests
