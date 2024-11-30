@@ -14,7 +14,6 @@ class AuthRequiredMixin:
 
         async with aiohttp.ClientSession(cookies=cookies) as session:
             response = await session.get(url="http://localhost:7000/admin.current")
-            print(await response.json())
             if response.status != 200:
                 raise HTTPUnauthorized
 

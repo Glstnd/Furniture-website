@@ -6,7 +6,7 @@ from app.web.config import Config
 class TestUserLoginView:
     async def test_bad_request_when_missed_email(self, cli: TestClient) -> None:
         response = await cli.post(
-            "/user.login",
+            "/api/accounts/user.login",
             json={
                 "password": "qwerty",
             },
@@ -24,7 +24,7 @@ class TestUserLoginView:
         self, cli: TestClient
     ) -> None:
         response = await cli.post(
-            "/user.login",
+            "/api/accounts/user.login",
             json={
                 "email": "qwerty",
                 "password": "qwerty",
@@ -39,7 +39,7 @@ class TestUserLoginView:
             self, reg_user_cli, config: Config
     ) -> None:
         response = await reg_user_cli.post(
-            "/user.login",
+            "/api/accounts/user.login",
             json={
                 "email": config.user.email,
                 "password": config.user.password,

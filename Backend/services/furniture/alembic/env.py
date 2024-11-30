@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -8,6 +9,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.store.database import BaseModel
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+load_dotenv(dotenv_path)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,6 +21,8 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+config.set_main_option("DB_URL", f"postgresql+asyncpg://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}:{os.environ['DB_PORT']}/{os.environ['DB_NAME']}")
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -32,12 +38,14 @@ target_metadata = BaseModel.metadata
 schema = "furniture_schema"
 
 
-includes_tables = ["admins", "admin_tokens", "users", "user_tokens", "accounts_alembic_version"]
+INCLUDE_TABLES = ["catalogs", "types", f"{schema}_alembic_version"]
 
 
 def include_object(object, name: str, type_, reflected, compare_to):
-    if name in includes_tables:
-        return False  # Исключить таблицы другого сервиса
+    if type_ == "table" and name in INCLUDE_TABLES:
+        return True  # Исключить таблицы другого сервиса
+    elif type_ == "table":
+        return False
     return True
 
 

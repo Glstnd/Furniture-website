@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -8,6 +9,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.store.database import BaseModel
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+load_dotenv(dotenv_path)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,13 +22,26 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+config.set_main_option("DB_URL", f"postgresql+asyncpg://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}:{os.environ['DB_PORT']}/{os.environ['DB_NAME']}")
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = BaseModel.metadata
 
+
 schema = "accounts"
+
+INCLUDE_TABLES = ["admins", "admin_tokens", "animals", "animal_tokens", f"{schema}_alembic_version"]
+
+
+def include_object(object, name: str, type_, reflected, compare_to):
+    if type_ == "table" and name in INCLUDE_TABLES:
+        return True  # Исключить таблицы другого сервиса
+    elif type_ == "table":
+        return False
+    return True
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -49,6 +66,7 @@ def run_migrations_offline() -> None:
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
+        include_object=include_object,
         dialect_opts={"paramstyle": "named"},
         version_table=f"{schema}_alembic_version"
     )
@@ -60,6 +78,7 @@ def run_migrations_offline() -> None:
 def do_run_migrations(connection: Connection) -> None:
     context.configure(connection=connection,
                       target_metadata=target_metadata,
+                      include_object=include_object,
                       version_table=f"{schema}_alembic_version")
 
     with context.begin_transaction():

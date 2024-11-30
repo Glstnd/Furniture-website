@@ -16,6 +16,16 @@ services:
     container_name: accounts_service
     build:
       context: ./Backend/services/accounts
+
+    environment:
+      DB_HOST: postgresDB
+      DB_PORT: 5433
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: FurnitureWebSite
+
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
     ports:
       - "7000:7000"
     depends_on:
@@ -25,6 +35,12 @@ services:
     container_name: furniture_service
     build:
       context: ./Backend/services/furniture
+    environment:
+      DB_HOST: postgresDB
+      DB_PORT: 5433
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: FurnitureWebSite
     ports:
       - "7001:7001"
     depends_on:
@@ -74,3 +90,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 15
+
+  swagger-ui:
+    container_name: swagger-ui
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8081:8080"
+    environment:
+      - URLS_PRIMARY_NAME=${URLS_PRIMARY_NAME}
+      - URLS=${URLS}
+    depends_on:
+      - accounts_service

@@ -5,10 +5,21 @@ if typing.TYPE_CHECKING:
 
 
 def setup_routes(app: "Application"):
-    from app.catalog.views import CatalogView
+    from app.catalog.views import CatalogListView
     from app.catalog.views import CatalogCreateView
-    from app.catalog.views import TypesProductsListView
+    from app.catalog.views import TypesListView
 
-    app.router.add_view("/list", CatalogView)
-    app.router.add_view("/create_catalog", CatalogCreateView)
-    app.router.add_view("/{catalog_tag}/list", TypesProductsListView)
+    from app.catalog.views import TypeView
+    from app.catalog.views import CatalogView
+    from app.catalog.views import TypeCreateView
+
+    app.router.add_view("/api/catalogs/list", CatalogListView)
+    app.router.add_view("/api/catalogs/create_catalog", CatalogCreateView)
+    app.router.add_view("/api/catalogs/{catalog_tag}/list", TypesListView)
+
+    # не сделаны
+    app.router.add_view("/api/catalogs/{catalog_tag}", CatalogView)
+    app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}", TypeView)
+    app.router.add_view("/api/catalogs/{catalog_tag}/create_type", TypeCreateView)
+    # app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/list", TypeListView)
+    # app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/{product_tag}", ProductView)

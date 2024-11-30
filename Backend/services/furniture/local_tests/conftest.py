@@ -14,8 +14,6 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker, AsyncSession,
 )
 
-from app.admin.models import AdminModel
-from app.user.models import UserModel
 from app.store import Database, Store
 from app.web.app import Application, setup_app
 from app.web.config import Config
@@ -40,12 +38,10 @@ def application() -> Application:
 
     app.database = Database(app)
     app.on_startup.append(app.database.connect)
-    app.on_startup.append(app.store.admins.connect)
-    app.on_startup.append(app.store.users.connect)
+    app.on_startup.append(app.store.catalogs.connect)
 
     app.on_shutdown.append(app.database.disconnect)
-    app.on_shutdown.append(app.store.admins.disconnect)
-    app.on_shutdown.append(app.store.users.disconnect)
+    app.on_shutdown.append(app.store.catalogs.disconnect)
     return app
 
 
@@ -107,47 +103,3 @@ def cli(
     application: Application,
 ) -> TestClient:
     return event_loop.run_until_complete(aiohttp_client(application))
-
-
-@pytest.fixture
-async def reg_admin_cli(cli: TestClient, config: Config) -> TestClient:
-    await cli.post(
-        path="/api/accounts/admin.register",
-        json={
-            "email": config.admin.email,
-            "password": config.admin.password,
-        },
-    )
-    return cli
-
-
-@pytest.fixture
-async def reg_user_cli(cli: TestClient, config: Config) -> TestClient:
-    await cli.post(
-        path="/api/accounts/user.register",
-        json={
-            "email": config.user.email,
-            "password": config.user.password,
-        },
-    )
-    return cli
-
-
-@pytest.fixture
-async def admin(cli, db_sessionmaker, config: Config) -> AdminModel:
-    new_admin = AdminModel(
-        email=config.admin.email,
-        password=sha256(config.admin.password.encode()).hexdigest(),
-    )
-
-    async with db_sessionmaker.begin() as session:
-        existed_admin = await session.scalar(
-            select(AdminModel).where(AdminModel.email == config.admin.email)
-        )
-        if existed_admin:
-            return AdminModel(id=existed_admin.id, email=existed_admin.email)
-
-        session.add(new_admin)
-        await session.commit()
-
-    return AdminModel(id=new_admin.id, email=new_admin.email)
