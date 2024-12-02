@@ -38,7 +38,7 @@ target_metadata = BaseModel.metadata
 schema = "furniture_schema"
 
 
-INCLUDE_TABLES = ["catalogs", "types", f"{schema}_alembic_version"]
+INCLUDE_TABLES = ["catalogs", "types", "products", f"{schema}_alembic_version"]
 
 
 def include_object(object, name: str, type_, reflected, compare_to):

@@ -13,7 +13,7 @@ class CatalogListView(View):
     async def get(self):
         catalogs = await self.store.catalogs.get_list_of_catalogs()
 
-        return json_response(data={"catalogs": [CatalogSchema().dump(catalog) for catalog in catalogs]})
+        return json_response(data=ListOfCatalogsSchema().dump({"catalogs": catalogs}))
 
 
 class CatalogCreateView(View):
@@ -24,12 +24,8 @@ class CatalogCreateView(View):
         # await AuthRequiredMixin.check_auth_admin(self.request)
 
         data = self.data
-        title = data.get("title")
-        tag = data.get("tag")
-        if not title or not tag:
-            raise HTTPForbidden
 
-        catalog = await self.store.catalogs.create_new_catalog(title, tag)
+        catalog = await self.store.catalogs.create_new_catalog(data)
 
         return json_response(data=CatalogSchema().dump(catalog))
 
@@ -39,27 +35,36 @@ class CatalogView(View):
     @request_schema(CatalogSchema)
     @response_schema(CatalogSchema, 200)
     async def put(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        data = self.data
 
-        return json_response(data={"data": "normal"})
+        catalog = await self.store.catalogs.update_catalog(data, catalog_tag)
+
+        return json_response(data=CatalogSchema().dump(catalog))
 
     @docs(tags=["catalog"], summary="Delete catalog", description="Delete catalog")
     @response_schema(CatalogSchema, 200)
     async def delete(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
 
-        return json_response(data={"data": "normal"})
+        await self.store.catalogs.delete_catalog(catalog_tag)
+
+        return json_response(data={"data": "Catalog deleted"})
 
     @docs(tags=["catalog"], summary="Get info catalog", description="Get info catalog")
     @response_schema(CatalogSchema, 200)
     async def get(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog = self.store.catalogs.get_catalog_by_tag(catalog_tag)
 
-        return json_response(data={"data": "normal"})
+        return json_response(data=CatalogSchema().dump(catalog))
 
 
 class TypesListView(View):
     @docs(tags=["type"], summary="Get list types", description="Get list types")
     @response_schema(ListOfTypesSchema, 200)
     async def get(self):
-        data = self.request.match_info["catalog_tag"]
+        catalog_tag = self.request.match_info["catalog_tag"]
         catalogs = await self.store.catalogs.get_list_of_catalogs()
 
         return json_response(data={"catalogs": [ListOfTypesSchema().dump(catalog) for catalog in catalogs]})

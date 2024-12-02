@@ -1,3 +1,4 @@
+import os
 import typing
 from dataclasses import dataclass
 
@@ -5,6 +6,10 @@ import yaml
 
 if typing.TYPE_CHECKING:
     from app.web.app import Application
+
+from dotenv import load_dotenv
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env')
+load_dotenv(dotenv_path)
 
 
 @dataclass
@@ -35,5 +40,11 @@ def setup_config(app: "Application", config_path: str):
         session=SessionConfig(
             key=raw_config["session"]["key"],
         ),
-        database=DatabaseConfig(**raw_config["database"]),
+        database=DatabaseConfig(
+            host=os.environ.get("DB_HOST"),
+            port=int(os.environ.get("DB_PORT")),
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            database=os.environ.get("DB_NAME"),
+        ),
     )
