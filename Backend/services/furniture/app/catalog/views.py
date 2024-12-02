@@ -1,7 +1,9 @@
-from aiohttp.web_exceptions import HTTPForbidden
+from aiohttp.web_exceptions import HTTPForbidden, HTTPNotFound
 from aiohttp_apispec import response_schema, docs, request_schema
 
-from app.catalog.schemes import CatalogSchema, TypeSchema, ListOfCatalogsSchema, ListOfTypesSchema
+from app.catalog.models import CatalogModel, TypeProductModel, ProductModel
+from app.catalog.schemes import CatalogSchema, TypeSchema, ListOfCatalogsSchema, ListOfTypesSchema, \
+    ListOfProductsSchema, ProductSchema
 from app.web.app import View
 from app.web.mixins import AuthRequiredMixin
 from app.web.utils import json_response
@@ -65,9 +67,13 @@ class TypesListView(View):
     @response_schema(ListOfTypesSchema, 200)
     async def get(self):
         catalog_tag = self.request.match_info["catalog_tag"]
-        catalogs = await self.store.catalogs.get_list_of_catalogs()
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
 
-        return json_response(data={"catalogs": [ListOfTypesSchema().dump(catalog) for catalog in catalogs]})
+        types = await self.store.types.get_list_of_types(catalog.id)
+
+        return json_response(data=ListOfTypesSchema().dump({"types": types}))
 
 
 class TypeView(View):
@@ -75,20 +81,53 @@ class TypeView(View):
     @request_schema(TypeSchema)
     @response_schema(TypeSchema, 200)
     async def put(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
 
-        return json_response(data={"data": "normal"})
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        data = self.data
+
+        type_product = await self.store.types.update_type(data, type_tag, catalog.id)
+
+        return json_response(data=TypeSchema().dump(type_product))
 
     @docs(tags=["type"], summary="Delete type", description="Delete type")
     @response_schema(TypeSchema, 200)
     async def delete(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
 
-        return json_response(data={"data": "normal"})
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        await self.store.types.delete_type(type_tag, catalog.id)
+
+        return json_response(data={"data": "Type of product deleted"})
 
     @docs(tags=["type"], summary="Get info type", description="Get info type")
     @response_schema(TypeSchema, 200)
     async def get(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
 
-        return json_response(data={"data": "normal"})
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        return json_response(data=TypeSchema().dump(type_product))
 
 
 class TypeCreateView(View):
@@ -98,22 +137,130 @@ class TypeCreateView(View):
     async def post(self):
         # await AuthRequiredMixin.check_auth_admin(self.request)
 
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
         data = self.data
-        title = data.get("title")
-        tag = data.get("tag")
-        if not title or not tag:
-            raise HTTPForbidden
 
-        catalog = await self.store.catalogs.create_new_catalog(title, tag)
+        type_product = await self.store.types.create_new_type(data, catalog.id)
 
-        return json_response(data=TypeSchema().dump(catalog))
+        return json_response(data=TypeSchema().dump(type_product))
 
 
 class ProductsListView(View):
-    @docs(tags=["product"], summary="Get list types", description="Get list types")
-    @response_schema(ListOfTypesSchema, 200)
+    @docs(tags=["product"], summary="Get list products", description="Get list products")
+    @response_schema(ListOfProductsSchema, 200)
     async def get(self):
-        data = self.request.match_info["catalog_tag"]
-        catalogs = await self.store.catalogs.get_list_of_catalogs()
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
 
-        return json_response(data={"catalogs": [ListOfTypesSchema().dump(catalog) for catalog in catalogs]})
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        products = await self.store.products.get_list_of_products(type_product.id)
+
+        return json_response(data=ListOfProductsSchema().dump({"products": products}))
+
+
+class ProductCreateView(View):
+    @docs(tags=["product"], summary="Create new type", description="Create new type")
+    @request_schema(ProductSchema)
+    @response_schema(ProductSchema, 200)
+    async def post(self):
+        # await AuthRequiredMixin.check_auth_admin(self.request)
+
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        data = self.data
+
+        product = await self.store.products.create_new_product(data, type_product.id)
+
+        return json_response(data=ProductSchema().dump(product))
+
+
+class ProductView(View):
+    @docs(tags=["product"], summary="Change product", description="Change product")
+    @request_schema(ProductSchema)
+    @response_schema(ProductSchema, 200)
+    async def put(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        product_tag = self.request.match_info["product_tag"]
+        product: ProductModel | None = self.store.products.get_product_by_tag(product_tag, type_product.id)
+        if not product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        data = self.data
+
+        product = await self.store.products.update_product(data, product_tag, catalog.id)
+
+        return json_response(data=ProductSchema().dump(product))
+
+    @docs(tags=["product"], summary="Delete product", description="Delete product")
+    @response_schema(ProductSchema, 200)
+    async def delete(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        product_tag = self.request.match_info["product_tag"]
+        product: ProductModel | None = self.store.products.get_product_by_tag(product_tag, type_product.id)
+        if not product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        await self.store.products.delete_product(product_tag, type_product.id)
+
+        return json_response(data={"data": "Product deleted"})
+
+    @docs(tags=["product"], summary="Get info product", description="Get info product")
+    @response_schema(ProductSchema, 200)
+    async def get(self):
+        catalog_tag = self.request.match_info["catalog_tag"]
+        catalog: CatalogModel | None = self.store.catalogs.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
+        type_tag = self.request.match_info["type_tag"]
+        type_product: TypeProductModel | None = self.store.types.get_type_by_tag(type_tag, catalog.id)
+        if not type_product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        product_tag = self.request.match_info["product_tag"]
+        product: ProductModel | None = self.store.products.get_product_by_tag(product_tag, type_product.id)
+        if not product:
+            raise HTTPNotFound(text="Type of product not found")
+
+        return json_response(data=ProductSchema().dump(product))

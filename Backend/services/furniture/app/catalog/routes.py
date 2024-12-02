@@ -12,14 +12,16 @@ def setup_routes(app: "Application"):
     from app.catalog.views import TypeView
     from app.catalog.views import CatalogView
     from app.catalog.views import TypeCreateView
+    from app.catalog.views import ProductsListView
+    from app.catalog.views import ProductView
 
     app.router.add_view("/api/catalogs/list", CatalogListView)
     app.router.add_view("/api/catalogs/create_catalog", CatalogCreateView)
     app.router.add_view("/api/catalogs/{catalog_tag}/list", TypesListView)
-
-    # не сделаны
     app.router.add_view("/api/catalogs/{catalog_tag}", CatalogView)
     app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}", TypeView)
     app.router.add_view("/api/catalogs/{catalog_tag}/create_type", TypeCreateView)
-    # app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/list", TypeListView)
-    # app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/{product_tag}", ProductView)
+    app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/list", ProductsListView)
+
+    # не сделаны
+    app.router.add_view("/api/catalogs/{catalog_tag}/{type_tag}/{product_tag}", ProductView)
