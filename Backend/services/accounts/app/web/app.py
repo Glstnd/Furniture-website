@@ -61,7 +61,7 @@ def setup_app(config_path: str) -> Application:
     setup_aiohttp_apispec(
         app, title="FurnitureWebSite", url="/api/accounts/docs/json", swagger_path="/api/accounts/docs"
     )
-    setup_cors(app)
+    # setup_cors(app)
     setup_middlewares(app)
     setup_store(app)
     return app
