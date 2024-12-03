@@ -97,7 +97,8 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - URLS_PRIMARY_NAME=${URLS_PRIMARY_NAME}
-      - URLS=${URLS}
+      URLS_PRIMARY_NAME: Accounts Service
+      URLS: "[ { url: 'http://localhost:7000/api/accounts/docs/json', name: 'Accounts Service' },
+      { url: 'http://localhost:7001/api/catalog/docs/json', name: 'Furniture service' } ]"
     depends_on:
       - accounts_service
