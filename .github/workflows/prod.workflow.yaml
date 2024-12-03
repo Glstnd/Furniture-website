@@ -69,6 +69,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Delete docker-compose containers
+        run: docker compose down
+
       - name: Build with docker-compose
         run: docker compose build
 
