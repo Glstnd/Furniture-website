@@ -53,9 +53,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - furniture_service
-      - accounts_service
-      - postgresDB
+      - kafka-ui
     ports:
       - "8080:8080"
 
@@ -68,6 +66,8 @@ services:
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+    depends_on:
+      - kafka
 
   kafka:
     image: obsidiandynamics/kafka
@@ -91,6 +91,9 @@ services:
       timeout: 5s
       retries: 15
 
+    depends_on:
+      - swagger-ui
+
   swagger-ui:
     container_name: swagger-ui
     image: swaggerapi/swagger-ui
@@ -102,3 +105,4 @@ services:
       { url: 'http://localhost:7001/api/catalog/docs/json', name: 'Furniture service' } ]"
     depends_on:
       - accounts_service
+      - furniture_service
