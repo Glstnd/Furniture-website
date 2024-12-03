@@ -58,7 +58,7 @@ def setup_app(config_path: str) -> Application:
     setup_aiohttp_apispec(
         app, title="catalog_microservice", url="/api/catalog/docs/json", swagger_path="/api/catalog/docs"
     )
-    # setup_cors(app)
     setup_middlewares(app)
     setup_store(app)
+    setup_cors(app)
     return app
