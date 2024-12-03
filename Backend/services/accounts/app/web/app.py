@@ -63,5 +63,5 @@ def setup_app(config_path: str) -> Application:
     )
     setup_middlewares(app)
     setup_store(app)
-    # setup_cors(app)
+    setup_cors(app)
     return app

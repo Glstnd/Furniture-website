@@ -106,8 +106,8 @@ services:
       - "8081:8080"
     environment:
       URLS_PRIMARY_NAME: Accounts Service
-      URLS: "[ { url: 'http://localhost:8080/api/accounts/docs/json', name: 'Accounts Service' },
-      { url: 'http://localhost:8080/api/catalog/docs/json', name: 'Furniture service' } ]"
+      URLS: "[ { url: 'http://localhost:7000/api/accounts/docs/json', name: 'Accounts Service' },
+      { url: 'http://localhost:7001/api/catalog/docs/json', name: 'Furniture service' } ]"
     depends_on:
       - accounts_service
       - furniture_service
