@@ -52,14 +52,15 @@ class View(AiohttpView, CorsViewMixin):
 
 app = Application()
 
-
 def setup_app(config_path: str) -> Application:
     setup_logging(app)
     setup_config(app, config_path)
     session_setup(app, EncryptedCookieStorage(secret_key=app.config.session.key, cookie_name="token", path='/'))
     setup_routes(app)
     setup_aiohttp_apispec(
-        app, title="FurnitureWebSite", url="/api/accounts/docs/json", swagger_path="/api/accounts/docs"
+        app, title="Account microservice",
+        url="/api/accounts/docs/json",
+        swagger_path="/api/accounts/docs"
     )
     setup_middlewares(app)
     setup_store(app)
