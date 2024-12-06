@@ -1,3 +1,6 @@
+networks:
+  dev:
+
 services:
   postgresDB:
     image: postgres:latest
@@ -15,6 +18,8 @@ services:
       test: "pg_isready -h localhost -p 5433 -U admin -d FurnitureWebSite"
       timeout: 10s
       retries: 20
+    networks:
+      - dev
 
   accounts_service:
     container_name: accounts_service
@@ -35,6 +40,8 @@ services:
     depends_on:
       postgresDB:
         condition: service_started
+    networks:
+      - dev
 
   furniture_service:
     container_name: furniture_service
@@ -53,6 +60,8 @@ services:
         condition: service_started
       accounts_service:
         condition: service_started
+    networks:
+      - dev
 
   nginx:
     container_name: nginx
@@ -64,6 +73,8 @@ services:
       - swagger-ui
     ports:
       - "80:80"
+    networks:
+      - dev
 
 #  kafka-ui:
 #    image: provectuslabs/kafka-ui
@@ -111,3 +122,5 @@ services:
     depends_on:
       - accounts_service
       - furniture_service
+    networks:
+      - dev
