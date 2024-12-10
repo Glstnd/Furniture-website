@@ -1,13 +1,13 @@
 import logging
 import os
+
 from asyncio import AbstractEventLoop
 from collections.abc import Iterator
-from hashlib import sha256
 
 import pytest
 from aiohttp.pytest_plugin import AiohttpClient
 from aiohttp.test_utils import TestClient, loop_context
-from sqlalchemy import inspect, select, text
+from sqlalchemy import inspect, select, text, and_
 from sqlalchemy.ext.asyncio import (
     AsyncConnection,
     AsyncEngine,
@@ -39,9 +39,13 @@ def application() -> Application:
     app.database = Database(app)
     app.on_startup.append(app.database.connect)
     app.on_startup.append(app.store.catalogs.connect)
+    app.on_startup.append(app.store.types.connect)
+    app.on_startup.append(app.store.products.connect)
 
     app.on_shutdown.append(app.database.disconnect)
     app.on_shutdown.append(app.store.catalogs.disconnect)
+    app.on_startup.append(app.store.types.disconnect)
+    app.on_startup.append(app.store.products.disconnect)
     return app
 
 
@@ -103,3 +107,32 @@ def cli(
     application: Application,
 ) -> TestClient:
     return event_loop.run_until_complete(aiohttp_client(application))
+
+
+@pytest.fixture
+async def catalog(application: Application):
+    new_catalog = {
+        "title": "test_catalog",
+        "tag": "test_catalog",
+    }
+
+    return await application.store.catalogs.create_new_catalog(new_catalog)
+
+
+@pytest.fixture
+async def type_product(application: Application, catalog):
+    new_type = {
+        "title": "test_type",
+        "tag": "test_type"
+    }
+
+    return await application.store.types.create_new_type(new_type, catalog.id)
+
+@pytest.fixture
+async def product(application: Application, type_product):
+    new_product = {
+        "title": "test_product",
+        "tag": "test_product"
+    }
+
+    return await application.store.products.create_new_product(new_product, type_product.id)

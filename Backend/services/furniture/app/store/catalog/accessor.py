@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import select, insert, update, delete, and_
 
-from aiohttp.web_exceptions import HTTPConflict, HTTPForbidden
+from aiohttp.web_exceptions import HTTPConflict, HTTPForbidden, HTTPNotFound
 from app.catalog.models import CatalogModel, TypeProductModel, ProductModel
 from app.base.base_accessor import BaseAccessor
 
@@ -23,7 +23,8 @@ class CatalogAccessor(BaseAccessor):
             res = await session.execute(request)
 
             for catalog in res.scalars().all():
-                catalog.image = base64.b64encode(catalog.image).decode("utf-8")
+                if catalog.image is not None:
+                    catalog.image = base64.b64encode(catalog.image).decode("utf-8")
                 catalogs.append(catalog)
 
         return catalogs
@@ -35,7 +36,8 @@ class CatalogAccessor(BaseAccessor):
 
             try:
                 catalog = res.scalars().one()
-                catalog.image = base64.b64encode(catalog.image).decode("utf-8")
+                if catalog.image is not None:
+                    catalog.image = base64.b64encode(catalog.image).decode("utf-8")
                 return catalog
             except Exception:
                 return None
@@ -49,10 +51,13 @@ class CatalogAccessor(BaseAccessor):
 
         catalog = await self.get_catalog_by_tag(tag)
         if catalog:
-            raise HTTPConflict
+            raise HTTPConflict(text="Catalog already exists")
 
-        image = base64.b64decode(data.get("image"))
-        data.pop("image")
+        if "image" in data:
+            image = base64.b64decode(data.get("image"))
+            data.pop("image")
+        else:
+            image = None
 
         request = insert(CatalogModel).values(**data, image=image)
         async with self.app.database.session() as session:
@@ -64,10 +69,15 @@ class CatalogAccessor(BaseAccessor):
             res = await session.execute(request)
 
             catalog = res.scalars().one()
-            catalog.image = base64.b64encode(catalog.image).decode("utf-8")
+            if catalog.image is not None:
+                catalog.image = base64.b64encode(catalog.image).decode("utf-8")
             return catalog
 
     async def update_catalog(self, data: dict, catalog_tag: str) -> CatalogModel | None:
+        catalog = await self.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
         if "image" in data:
             image = base64.b64decode(data.get("image"))
             data.pop("image")
@@ -82,9 +92,15 @@ class CatalogAccessor(BaseAccessor):
                 await session.execute(request)
                 await session.commit()
 
+        if "tag" in data:
+            catalog_tag = data.get("tag")
         return await self.get_catalog_by_tag(catalog_tag)
 
     async def delete_catalog(self, catalog_tag: str) -> None:
+        catalog = await self.get_catalog_by_tag(catalog_tag)
+        if not catalog:
+            raise HTTPNotFound(text="Catalog not found")
+
         request = delete(CatalogModel).where(CatalogModel.tag == catalog_tag)
         async with self.app.database.session() as session:
             await session.execute(request)
@@ -103,7 +119,8 @@ class TypeAccessor(BaseAccessor):
             res = await session.execute(request)
 
             for type_product in res.scalars().all():
-                type_product.image = base64.b64encode(type_product.image).decode("utf-8")
+                if type_product.image is not None:
+                    type_product.image = base64.b64encode(type_product.image).decode("utf-8")
                 types.append(type_product)
 
         return types
@@ -118,7 +135,8 @@ class TypeAccessor(BaseAccessor):
 
             try:
                 type_product = res.scalars().one()
-                type_product.image = base64.b64encode(type_product.image).decode("utf-8")
+                if type_product.image is not None:
+                    type_product.image = base64.b64encode(type_product.image).decode("utf-8")
                 return type_product
             except Exception:
                 return None
@@ -144,7 +162,10 @@ class TypeAccessor(BaseAccessor):
                 await session.execute(request)
                 await session.commit()
 
-        return await self.get_type_by_tag(type_tag)
+        if "tag" in data:
+            type_tag = data.get("tag")
+
+        return await self.get_type_by_tag(type_tag, catalog_id)
 
     async def delete_type(self, type_tag: str, catalog_id: int) -> None:
         request = delete(TypeProductModel).where(and_(
@@ -166,8 +187,11 @@ class TypeAccessor(BaseAccessor):
         if type_product:
             raise HTTPConflict
 
-        image = base64.b64decode(data.get("image"))
-        data.pop("image")
+        if "image" in data:
+            image = base64.b64decode(data.get("image"))
+            data.pop("image")
+        else:
+            image = None
 
         request = insert(TypeProductModel).values(**data, image=image, catalog_id=catalog_id)
         async with self.app.database.session() as session:
@@ -181,15 +205,16 @@ class ProductAccessor(BaseAccessor):
     async def connect(self, app: "Application") -> None:
         self.app = app
 
-    async def get_list_of_products(self, type_id: int) -> list[TypeProductModel]:
-        products: list[TypeProductModel] = []
+    async def get_list_of_products(self, type_id: int) -> list[ProductModel]:
+        products: list[ProductModel] = []
 
-        request = select(TypeProductModel).where(TypeProductModel.type_id == type_id)
+        request = select(ProductModel).where(ProductModel.type_id == type_id)
         async with self.app.database.session() as session:
             res = await session.execute(request)
 
             for product in res.scalars().all():
-                product.image = base64.b64encode(product.image).decode("utf-8")
+                if product.image is not None:
+                    product.image = base64.b64encode(product.image).decode("utf-8")
                 products.append(product)
 
         return products
@@ -204,7 +229,8 @@ class ProductAccessor(BaseAccessor):
 
             try:
                 product = res.scalars().one()
-                product.image = base64.b64encode(product.image).decode("utf-8")
+                if product.image is not None:
+                    product.image = base64.b64encode(product.image).decode("utf-8")
                 return product
             except Exception:
                 return None
@@ -220,8 +246,11 @@ class ProductAccessor(BaseAccessor):
         if product:
             raise HTTPConflict(text="Product already exists")
 
-        image = base64.b64decode(data.get("image"))
-        data.pop("image")
+        if "image" in data:
+            image = base64.b64decode(data.get("image"))
+            data.pop("image")
+        else:
+            image = None
 
         request = insert(ProductModel).values(**data, image=image, type_id=type_id)
         async with self.app.database.session() as session:
@@ -250,6 +279,9 @@ class ProductAccessor(BaseAccessor):
             async with self.app.database.session() as session:
                 await session.execute(request)
                 await session.commit()
+
+        if "tag" in data:
+            product_tag = data.get("tag")
 
         return await self.get_product_by_tag(product_tag, type_id)
 

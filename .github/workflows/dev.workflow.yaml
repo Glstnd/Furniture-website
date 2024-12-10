@@ -60,3 +60,64 @@ jobs:
       - name: Run tests
         working-directory: Backend/services/accounts
         run: pytest tests
+
+  test_furniture_service:
+    needs: test_accounts_service
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+          POSTGRES_DB: FurnitureWebSite
+        ports:
+          - 5433:5432
+        options:
+          --health-cmd "pg_isready -U admin"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Create virtual environment
+        working-directory: Backend/services/furniture
+        run: python -m venv venv
+
+      - name: Activate virtual environment
+        working-directory: Backend/services/furniture
+        run: source venv/bin/activate
+
+      - name: Install Python dependencies
+        working-directory: Backend/services/furniture
+        run: pip install -r requirements.txt
+
+      - name: Add environment variables
+        working-directory: Backend/services/furniture
+        run: |
+          echo "DB_USER=admin" >> .env
+          echo "DB_PASSWORD=admin" >> .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5433" >> .env
+          echo "DB_NAME=FurnitureWebSite" >> .env
+
+      - name: Start migrations
+        working-directory: Backend/services/furniture
+        run: alembic upgrade head
+
+      - name: Run local tests
+        working-directory: Backend/services/furniture
+        run: pytest local_tests
+
+      - name: Run tests
+        working-directory: Backend/services/furniture
+        run: pytest tests

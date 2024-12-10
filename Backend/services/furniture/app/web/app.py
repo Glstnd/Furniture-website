@@ -46,6 +46,10 @@ class View(AiohttpView, CorsViewMixin):
     def data(self) -> dict:
         return self.request.get("data", {})
 
+    @property
+    def match_info(self) -> dict:
+        return self.request.match_info
+
 
 app = Application()
 
