@@ -39,7 +39,7 @@ services:
       - "7000:7000"
     depends_on:
       postgresDB:
-        condition: service_started
+        condition: service_healthy
     networks:
       - dev
 
@@ -57,7 +57,7 @@ services:
       - "7001:7001"
     depends_on:
       postgresDB:
-        condition: service_started
+        condition: service_healthy
       accounts_service:
         condition: service_started
     networks:
