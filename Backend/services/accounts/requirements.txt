@@ -27,7 +27,11 @@ MarkupSafe==2.1.4
 packaging==23.2
 pluggy==1.4.0
 pycparser==2.21
-typing_extensions==4.9.0
+typing_extensions==4.12.2
 webargs==8.4.0
 yarl==1.9.4
 pyjwt==2.9.0
+python-dotenv==1.0.1
+
+aiokafka==0.12.0
+aiohttp_cors==0.7.0

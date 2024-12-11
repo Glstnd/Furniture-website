@@ -8,7 +8,7 @@ class TestUserRegisterView:
         self, cli: TestClient, config: Config
     ) -> None:
         response = await cli.post(
-            "/user.register",
+            "/api/accounts/user.register",
             json={
                 "email": config.user.email,
                 "password": config.user.password,
@@ -24,7 +24,7 @@ class TestUserRegisterView:
 
     async def test_bad_request_when_missed_email(self, cli: TestClient) -> None:
         response = await cli.post(
-            "/user.register",
+            "/api/accounts/user.register",
             json={
                 "password": "qwerty",
             },
@@ -39,7 +39,7 @@ class TestUserRegisterView:
 
     async def test_forbidden_when_not_unique_email(self, reg_user_cli, config: Config) -> None:
         response = await reg_user_cli.post(
-            "/user.register",
+            "/api/accounts/user.register",
             json={
                 "email": config.user.email,
                 "password": config.user.password,

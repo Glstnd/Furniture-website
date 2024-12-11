@@ -6,7 +6,7 @@ from aiohttp_apispec import request_schema, response_schema, docs
 from app.user.schemes import UserSchema
 from app.web.app import View
 from app.web.mixins import AuthRequiredMixin
-from app.web.utils import json_response, generate_jwt_token
+from app.web.utils import json_response, generate_jwt_token, send_kafka
 
 JWT_EXP_DELTA_SECONDS = 20
 
@@ -54,5 +54,7 @@ class UserCurrentView(View):
     @response_schema(UserSchema, 200)
     async def get(self):
         user = await AuthRequiredMixin.check_auth_user(self.request)
+
+        await send_kafka(self.request.app, "user.current", {"data": UserSchema().dump(user)})
 
         return json_response(data=UserSchema().dump(user))

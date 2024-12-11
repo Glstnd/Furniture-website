@@ -1,0 +1,19 @@
+user_token: OTY3NmVjYWYtZTJhNC00NzNhLTgwM2YtZGY3OTBkYTM3YWFhXzcxMTQ=
+
+session:
+  key: CaY5iCkYtN7DqXdiYK1BvmGrQuaSA4Tl4bEk9my0jc0=
+
+catalog:
+  title: sofa
+  tag: sofa
+
+user:
+  email: admin.com
+  password: admin
+
+database:
+  host: postgresDB
+  port: 5433
+  user: admin
+  password: admin
+  database: FurnitureWebSite

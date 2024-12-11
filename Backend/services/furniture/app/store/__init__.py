@@ -11,8 +11,12 @@ class Store:
         self.app = app
 
         from app.store.catalog.accessor import CatalogAccessor
+        from app.store.catalog.accessor import TypeAccessor
+        from app.store.catalog.accessor import ProductAccessor
 
-        self.catalogs = CatalogAccessor(app)
+        self.catalogs: CatalogAccessor = CatalogAccessor(app)
+        self.types: TypeAccessor = TypeAccessor(app)
+        self.products: ProductAccessor = ProductAccessor(app)
 
 
 def setup_store(app: "Application"):

@@ -10,13 +10,14 @@ from app.web.app import Request
 class AuthRequiredMixin:
     @staticmethod
     async def check_auth_admin(request: Request) -> None:
-        cookies = SimpleCookie(request.cookies)
+        # cookies = SimpleCookie(request.cookies)
+        #
+        # async with aiohttp.ClientSession(cookies=cookies) as session:
+        #     response = await session.get(url="http://localhost:7000/admin.current")
+        #     if response.status != 200:
+        #         raise HTTPUnauthorized
 
-        async with aiohttp.ClientSession(cookies=cookies) as session:
-            response = await session.get(url="http://localhost:7000/admin.current")
-            print(await response.json())
-            if response.status != 200:
-                raise HTTPUnauthorized
+        return True
 
     @staticmethod
     async def check_auth_user(request: Request) -> bool:

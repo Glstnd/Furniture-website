@@ -1,10 +1,15 @@
 import base64
+import json
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 import jwt
 from aiohttp.web import json_response as aiohttp_json_response
 from aiohttp.web_response import Response
+from aiokafka import AIOKafkaProducer
 
+if TYPE_CHECKING:
+    from app.web.app import Application
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
@@ -57,3 +62,21 @@ def generate_jwt_token(user_login: str, datetime_jwt: datetime):
     jwt_token: str = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
 
     return jwt_token
+
+def kafka_serializer(value):
+    return json.dumps(value).encode()
+
+async def send_kafka(app: "Application", topic: str, msg: dict):
+    try:
+        producer = AIOKafkaProducer(
+            bootstrap_servers=app.config.kafka.bootstrap_servers
+        )
+        await producer.start()
+
+        try:
+            await producer.send_and_wait(topic, kafka_serializer(msg))
+        finally:
+            await producer.stop()
+
+    except Exception as err:
+        print(f"Some Kafka error: {err}")

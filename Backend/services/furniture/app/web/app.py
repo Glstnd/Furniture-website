@@ -4,12 +4,14 @@ from aiohttp.web import (
     View as AiohttpView,
 )
 from aiohttp_apispec import setup_aiohttp_apispec
+from aiohttp_cors import CorsViewMixin
 from aiohttp_session import setup as session_setup
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
 from app.store import Store, setup_store
 from app.store.database.database import Database
 from app.web.config import Config, setup_config
+from app.web.cors import setup_cors
 from app.web.logger import setup_logging
 from app.web.middlewares import setup_middlewares
 from app.web.routes import setup_routes
@@ -27,7 +29,7 @@ class Request(AiohttpRequest):
         return super().app()
 
 
-class View(AiohttpView):
+class View(AiohttpView, CorsViewMixin):
     @property
     def request(self) -> Request:
         return super().request
@@ -44,6 +46,10 @@ class View(AiohttpView):
     def data(self) -> dict:
         return self.request.get("data", {})
 
+    @property
+    def match_info(self) -> dict:
+        return self.request.match_info
+
 
 app = Application()
 
@@ -58,4 +64,5 @@ def setup_app(config_path: str) -> Application:
     )
     setup_middlewares(app)
     setup_store(app)
+    setup_cors(app)
     return app

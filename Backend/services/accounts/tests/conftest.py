@@ -112,7 +112,7 @@ def cli(
 @pytest.fixture
 async def reg_admin_cli(cli: TestClient, config: Config) -> TestClient:
     await cli.post(
-        path="/admin.register",
+        path="/api/accounts/admin.register",
         json={
             "email": config.admin.email,
             "password": config.admin.password,
@@ -124,7 +124,7 @@ async def reg_admin_cli(cli: TestClient, config: Config) -> TestClient:
 @pytest.fixture
 async def reg_user_cli(cli: TestClient, config: Config) -> TestClient:
     await cli.post(
-        path="/user.register",
+        path="/api/accounts/user.register",
         json={
             "email": config.user.email,
             "password": config.user.password,

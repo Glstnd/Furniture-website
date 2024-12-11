@@ -2,7 +2,7 @@ from aiohttp.web import json_response as aiohttp_json_response
 from aiohttp.web_response import Response
 
 
-def json_response(data: dict | None = None, status: str = "ok") -> Response:
+def json_response(data: dict | str | None = None, status: str = "ok") -> Response:
     return aiohttp_json_response(
         data={
             "status": status,

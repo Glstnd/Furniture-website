@@ -31,4 +31,6 @@ pycparser==2.21
 typing_extensions==4.9.0
 webargs==8.4.0
 yarl==1.9.4
-matplotlib==3.9.2
+python-dotenv==1.0.1
+
+aiohttp_cors==0.7.0
