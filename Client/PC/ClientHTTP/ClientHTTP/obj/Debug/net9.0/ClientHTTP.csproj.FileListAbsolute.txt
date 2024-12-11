@@ -1,0 +1,15 @@
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\bin\Debug\net9.0\ClientHTTP.exe
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\bin\Debug\net9.0\ClientHTTP.deps.json
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\bin\Debug\net9.0\ClientHTTP.runtimeconfig.json
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\bin\Debug\net9.0\ClientHTTP.dll
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\bin\Debug\net9.0\ClientHTTP.pdb
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.AssemblyInfoInputs.cache
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.AssemblyInfo.cs
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.csproj.CoreCompileInputs.cache
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.sourcelink.json
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.dll
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\refint\ClientHTTP.dll
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.pdb
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ClientHTTP.genruntimeconfig.cache
+C:\Users\31rom\Documents\GitHub\Furniture-website\Client\PC\ClientHTTP\ClientHTTP\obj\Debug\net9.0\ref\ClientHTTP.dll
