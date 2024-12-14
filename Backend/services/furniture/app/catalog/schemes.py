@@ -2,7 +2,7 @@ from marshmallow import Schema, fields
 
 
 class CatalogSchema(Schema):
-    id = fields.Int(required=False)
+    id = fields.Int(required=False, dump_only=True)
     title = fields.Str(required=True)
     tag = fields.Str(required=True)
     image = fields.Str(required=False)
@@ -21,10 +21,10 @@ class ListOfCatalogsSchema(Schema):
 
 
 class TypeSchema(Schema):
-    id = fields.Int(required=False)
+    id = fields.Int(required=False, dump_only=True)
     title = fields.Str(required=True)
     tag = fields.Str(required=True)
-    catalog_id = fields.Int(required=False)
+    catalog_id = fields.Int(required=False, dump_only=True, load_only=True)
     image = fields.Str(required=False)
     file_extension = fields.Str(required=False)
 
@@ -33,10 +33,10 @@ class ListOfTypesSchema(Schema):
     types = fields.Nested(TypeSchema, many=True)
 
 class ProductSchema(Schema):
-    id = fields.Int(required=False)
+    id = fields.Int(required=False, dump_only=True)
     title = fields.Str(required=True)
     tag = fields.Str(required=True)
-    type_id = fields.Int(required=False)
+    type_id = fields.Int(required=False, dump_only=True, load_only=True)
     image = fields.Str(required=False)
     file_extension = fields.Str(required=False)
 
