@@ -17,15 +17,14 @@ class UserAccessor(BaseAccessor):
         self.app = app
 
     async def get_by_email(self, email_str: str) -> UserModel | None:
-        request = select(UserModel)
+        request = select(UserModel).where(UserModel.email == email_str)
         async with self.app.database.session() as session:
             res = await session.execute(request)
 
-            for admin in res.scalars().all():
-                if str(admin.email).strip() == email_str:
-                    return admin
-
-        return None
+            try:
+                return res.scalars().one()
+            except Exception:
+                return None
 
     async def create_user(self, email_str: str, password_str: str) -> UserModel:
         user = await self.get_by_email(email_str)
@@ -51,19 +50,18 @@ class UserTokenAccessor(BaseAccessor):
             res = await session.execute(request)
 
             try:
-                user_token: UserTokenModel = res.scalars().one()
+                return res.scalars().one()
             except Exception:
                 return None
-            return user_token
 
     async def create_user_token(self, user_id, jwt_datetime: datetime):
         user_token = await self.get_by_user_id(user_id)
         if user_token:
-            request = update(UserTokenModel).where(UserTokenModel.user_id == user_id).values(user_id=user_id,
+            request = (update(UserTokenModel).where(UserTokenModel.user_id == user_id).values(user_id=user_id,
                                                                                              jwt_datetime=jwt_datetime,
                                                                                              expiry_datetime=
                                                                                              (jwt_datetime +
-                                                                                              timedelta(days=50)))
+                                                                                              timedelta(days=50))))
         else:
             request = insert(UserTokenModel).values(user_id=user_id,
                                                     jwt_datetime=jwt_datetime,

@@ -55,6 +55,4 @@ class UserCurrentView(View):
     async def get(self):
         user = await AuthRequiredMixin.check_auth_user(self.request)
 
-        await send_kafka(self.request.app, "user.current", {"data": UserSchema().dump(user)})
-
         return json_response(data=UserSchema().dump(user))
